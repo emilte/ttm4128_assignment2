@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- Base project css -->
+    <link rel="stylesheet" type="text/css" href="{% static 'ttm4128_assignment2/css/base.css' %}"/>
+
+    <!-- Tab icon -->
+    <link rel="shortcut icon" type="image/png" href="https://png.icons8.com/metro/16/006F30/musical-notes.png"/>
+
+    <title>{% block title %}Hjem{% endblock %}</title>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    {% include "ttm4128_assignment2/navbar.html" %}
+
+    <div id="content-wrapper" class="container">
+
+        {% for message in messages %}
+            {% if 'success' in message.tags %}
+                <div class="container bg-success rounded mb-1">
+                    {{ message }}
+                </div>
+            {% elif 'error' in message.tags %}
+                <div class="container bg-danger rounded mb-1">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
+        <!-- breadcrumbs -->
+        <nav aria-label="breadcrumb">
+            <ol id="breadcrumbs" class="breadcrumb">
+                <li class="breadcrumb-item"><a href="">Hjem</a></li>
+                {% block breadcrumbs %}
+
+                {% endblock %}
+            </ol>
+        </nav> <!-- End: breadcrumbs -->
+
+        {% block body %}
+            <!-- Other templates are inserted here -->
+        {% endblock %}
+    </div>
+
+
+    {% include "ttm4128_assignment2/footer.html" %}
+
+
+    <!-- JQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+    {% block script %}{% endblock %}
+
+</body>
+</html>
