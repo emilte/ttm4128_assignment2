@@ -34,9 +34,16 @@
             {% endfor %}
 
 
-            {% if data|length|divisibleby:3 %}
+            {% if not data|length|divisibleby:3 %}
                 </div>
             {% endif %}
+
+        </div>
+
+        <div class="classnames">
+            {% for classname in classnames %}
+                <p>{{ classname }}</p>
+            {% endfor %}
 
         </div>
 
