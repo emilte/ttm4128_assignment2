@@ -39,10 +39,10 @@ class Interactive(View):
 
     def get(self, request):
 
-        self.form()
+        form = self.form()
 
         return render(request, self.template, {
-            'form': self.form,
+            'form': form,
         })
 
     def post(self, request):
@@ -60,7 +60,6 @@ class Interactive(View):
         if form.is_valid():
             data = form.cleaned_data
             print(data)
-
             data = methods[form.cleaned_data['function']]()
 
 
