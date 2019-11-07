@@ -1,3 +1,4 @@
 db.sqlite3
 */migrations/*.py
 local_settings.py
+Pipfile.lock
