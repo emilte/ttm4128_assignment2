@@ -10,12 +10,13 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="{% url 'wbem:interactive' %}">Interactive</a></li>
+<li class="breadcrumb-item"><a href="{% url 'wbem:api' %}">API</a></li>
+    <li class="breadcrumb-item"><a href="">{{ form.method }}</a></li>
 {% endblock %}
 
 {% block body %}
 
-        <h1>Interactive:</h1>
+        <h1>{{ form.method }}:</h1>
 
         <div class="row">
 

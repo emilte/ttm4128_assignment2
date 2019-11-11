@@ -23,6 +23,10 @@ body::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
+.required:after {
+    content: ' *'
+}
+
 
 a:hover {
     color: lightblue;

@@ -148,7 +148,7 @@ checklist = {
 }
 
 def check_settings(settings=None):
-    if settings:
+    if len(settings) > 0:
         print("|\n== CHECK SETTINGS ==")
         for k, v in settings.items():
             print("{} = {}".format(k, v))
