@@ -6,10 +6,7 @@ app_name = 'wbem'
 
 
 urlpatterns = [
-    #path('', views.Dashboard.as_view(), name="dashboard"),
-    #path('', views.Dashboard.as_view(), name="dashboard"),
-    #path('interactive/', views.Interactive.as_view(), name="interactive"),
-    #path('enumerate_classnames/', views.EnumerateClassNames.as_view(), name="enumerate_classnames"),
+    path('dashboard/', views.Dashboard.as_view(), name="dashboard"),
 
     path('', views.API.as_view(), name="api"),
 
@@ -28,7 +25,7 @@ urlpatterns = [
     #
     # path('ec/', views.Ec.as_view(), name="ec"),
     path('ecn/', views.Dynamic.as_view(form=wbem_forms.EcnForm), name="ecn"),
-    # path('gc/', views.Gc.as_view(), name="gc"),
+    path('gc/', views.Dynamic.as_view(form=wbem_forms.GcForm), name="gc"),
     # path('mc/', views.Mc.as_view(), name="mc"),
     # path('cc/', views.Cc.as_view(), name="cc"),
     # path('dc/', views.Dc.as_view(), name="dc"),
