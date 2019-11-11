@@ -89,3 +89,22 @@ class EcnForm(forms.Form):
         super(EcnForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
+class GcForm(forms.Form):
+    # Order is important
+    ClassName = forms.CharField(max_length=200, required=True)
+    namespace = forms.CharField(max_length=200, required=False)
+    LocalOnly = forms.BooleanField(initial=True, required=False)
+    IncludeQualifiers = forms.BooleanField(required=False)
+    IncludeClassOrigin = forms.BooleanField(required=False)
+
+
+    required_css_class = 'required'
+
+    method = 'GetClass'
+    short_name = 'gc'
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
