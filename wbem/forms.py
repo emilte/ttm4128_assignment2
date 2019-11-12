@@ -12,12 +12,13 @@ class EiForm(forms.Form):
     required_css_class = 'required'
 
     method = 'EnumerateInstances'
-
+    short_name = 'ei'
 
     def __init__(self, *args, **kwargs):
         super(EiForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
 
 class EinForm(forms.Form):
     # Order is important
@@ -28,13 +29,12 @@ class EinForm(forms.Form):
     required_css_class = 'required'
 
     method = 'EnumerateInstanceNames'
-
+    short_name = 'ein'
 
     def __init__(self, *args, **kwargs):
         super(EinForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
-
 
 
 class GiForm(forms.Form):
@@ -48,11 +48,11 @@ class GiForm(forms.Form):
     method = 'GetInstance'
     short_name = 'gi'
 
-
     def __init__(self, *args, **kwargs):
         super(GiForm, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
 
 class EcnForm(forms.Form):
     # Order is important
@@ -70,6 +70,7 @@ class EcnForm(forms.Form):
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
 
+
 class GcForm(forms.Form):
     # Order is important
     ClassName = forms.CharField(max_length=200, required=True)
@@ -78,11 +79,41 @@ class GcForm(forms.Form):
     IncludeQualifiers = forms.BooleanField(required=False)
     IncludeClassOrigin = forms.BooleanField(required=False)
 
-
     required_css_class = 'required'
 
     method = 'GetClass'
     short_name = 'gc'
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+
+class EqForm(forms.Form):
+    # Order is important
+    namespace = forms.CharField(max_length=200, required=False)
+
+    required_css_class = 'required'
+
+    method = 'EnumerateQualifiers'
+    short_name = 'eq'
+
+    def __init__(self, *args, **kwargs):
+        super(type(self), self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
+
+class GqForm(forms.Form):
+    # Order is important
+    QualifierName = forms.CharField(max_length=200, required=True)
+    namespace = forms.CharField(max_length=200, required=False)
+
+    required_css_class = 'required'
+
+    method = 'GetQualifier'
+    short_name = 'gq'
 
     def __init__(self, *args, **kwargs):
         super(type(self), self).__init__(*args, **kwargs)

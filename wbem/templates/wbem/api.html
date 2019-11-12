@@ -15,9 +15,18 @@
 
 {% block body %}
 
-    {% for name in urlnames %}
-        <a href="{% url name %}">{{ name }}</a><br>
-    {% endfor %}
+    <div class="row">
+        <div class="col">
+            <div class="container">
+                {% for url in urlpatterns %}
+                    <a href="{{ url.pattern }}">{{ url.name }} {{ url.callback }}</a><br>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col">
+            <a href="#"></a>
+        </div>
+    </div>
 
 
 {% endblock %}
