@@ -119,3 +119,14 @@ class GqForm(forms.Form):
         super(type(self), self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs.update({'class': 'form-control'})
+
+class NetworkForm(forms.Form):
+    INFO_CHOICES = [("mac_address","MAC Address"),("general","Interface info")]
+    IFACE_CHOICES= [("eth0","IPv4_eth0"	),("lo","IPv4_lo")]
+    interfaces_choice = forms.CharField(label='Which interface would you like information about?', widget=forms.Select(attrs={'class':'form-control'},choices=IFACE_CHOICES))
+    interface_info_pre= forms.MultipleChoiceField(label="What info do you want from the interface?", widget=forms.CheckboxSelectMultiple, choices=INFO_CHOICES)
+
+
+
+
+

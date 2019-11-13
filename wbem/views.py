@@ -4,6 +4,7 @@ import pywbem
 import json
 from wbem import models as wbem_models
 from wbem import forms as wbem_forms
+import os
 
 # Create your views here.
 class Dashboard(View):
@@ -56,6 +57,8 @@ class OperatingSystem(View):
         return render(request, self.template, {
 
         })
+
+
 
 
 class Dynamic(View):
@@ -145,3 +148,62 @@ class Dynamic(View):
             'form': form,
             'result': result,
         })
+
+class Network(View):
+
+    template = 'wbem/dynamic.html'
+    form = None
+
+    def get(self, request, system):
+	    form=self.form()
+	   # f = os.popen("/usr/bin/wbemcli ei 'http://ttm4128.item.ntnu.no:5988/root/cimv2:CIM_IPProtocolEndpoint' -nl | grep -oP '^-ElementName=\K.*'")
+	    #interfaces = f.read()
+	    return render(request, self.template, {'form':form})
+
+    def post(self, request, system):
+
+
+        interface_names = {'lo':'IPv4_lo', 'eth0':'IPv4_eth0'}
+        result_string = ""
+
+        form = self.form(request.POST)
+        result = None
+
+		#eth0 or lo
+        interface=request.POST.get('interfaces_choice')
+        interface_info = request.POST.getlist('interface_info_pre')
+
+        if interface == 'lo':
+            CIMinterface='IPv4_lo'
+            iface_type = "Linux_LocalLoopbackPort"
+        if interface == 'eth0':
+            CIMinterface='IPv4_eth0'
+            iface_type = "Linux_EthernetPort"
+
+        if form.is_valid():
+            data = form.cleaned_data
+            try:
+                import inspect
+                for item in interface_info:
+                    if 'mac_address' == item:
+	                    print("MAC address:\n")
+	                    f = os.popen("""/usr/bin/wbemcli ei 'http://ttm4128.item.ntnu.no:5988/root/cimv2:%s.SystemCreationClassName="Linux_ComputerSystem",SystemName="ttm4128.item.ntnu.no",CreationClassName=\'%s',DeviceID="lo"' -nl | grep -oP '^-PermanentAddress=\K.*'""" % (iface_type, iface_type))
+	                    mac_address = f.read()
+	                    print(mac_address)
+	                    result_string += "\n" + "MAC address:\n" + mac_address + "\n"
+                    if 'general' == item:
+	                    print("General info:\n")
+	                    f = os.popen("""/usr/bin/wbemcli gi 'http://ttm4128.item.ntnu.no:5988/root/cimv2:Linux_IPProtocolEndpoint.Name="%s",SystemCreationClassName="Linux_ComputerSystem",SystemName="ttm4128.item.ntnu.no",CreationClassName="Linux_IPProtocolEndpoint"' -nl""" % CIMinterface)
+	                    info = f.read()
+	                    result_string += "\n" + "General info:\n" + info + "\n"
+	                    print(info)
+                # Order of input is important
+
+                try: result, self.iterable = result.__dict__, True
+                except: pass
+            except Exception as e:
+                print(e)
+                print("ERROR")
+                result = e
+        return render(request, self.template, {'form':form, 'result':result_string})
+	   # return render(request, self.template)

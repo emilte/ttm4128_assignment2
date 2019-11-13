@@ -34,6 +34,7 @@ urlpatterns = [
     path('gq/', views.Dynamic.as_view(form=wbem_forms.GqForm), name="GetQualifier"),
 
     path('operating_system/<str:system>', views.OperatingSystem.as_view(), name="operating_system"),
+    path('network/<str:system>', views.Network.as_view(form=wbem_forms.NetworkForm), name="network"),
 
 
 
