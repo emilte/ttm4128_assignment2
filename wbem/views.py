@@ -11,7 +11,7 @@ class Dashboard(View):
 
     def get(self, request):
 
-        data = ["Linux", "v2", "76345"] * 3
+        data = ["Linux"] * 4
 
         # server_url = 'http://ttm4128.item.ntnu.no:5988/root/cimv2'
         #server_url = Options.objects.first().server_url
@@ -46,15 +46,36 @@ class API(View):
             'urlnames': urlnames,
         })
 
-class OperatingSystem(View):
-    template = 'wbem/operating_system.html'
+class System(View):
+    template = 'wbem/system.html'
 
     def get(self, request, system):
 
         print(system)
 
-        return render(request, self.template, {
+        server_url = 'http://ttm4128.item.ntnu.no:5988/cimom'
 
+        conn = pywbem.WBEMConnection(server_url)
+
+        result = {}
+        result1 = conn.EnumerateInstances(ClassName='CIM_OperatingSystem')[0].properties['ElementName'].value
+        result2 = conn.EnumerateInstances(ClassName='CIM_System')[0].properties['ElementName'].value
+        result3 = conn.EnumerateInstances(ClassName='CIM_Processor')[0].properties['ElementName'].value
+
+        #print(result3.properties['ElementName'].value)
+
+        #element = result1.properties['ElementName'].value
+        parsed = {i.split("=")[0]: i.split("=")[1].replace('"','') for i in result1.split('" ')}
+
+
+        result['os_name'] = parsed['NAME']
+        result['os_version'] = parsed['VERSION']
+        result['system'] = result2
+        result['processor'] = result3
+
+        return render(request, self.template, {
+            'iterable': True,
+            'result': result,
         })
 
 

@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('', views.API.as_view(), name="api"),
 
-    path('ei/', views.Dynamic.as_view(form=wbem_forms.EcnForm), name="EnumerateInstances"),
+    path('ei/', views.Dynamic.as_view(form=wbem_forms.EiForm), name="EnumerateInstances"),
     path('ein/', views.Dynamic.as_view(form=wbem_forms.EinForm), name="EnumerateInstanceNames"),
     path('gi/', views.Dynamic.as_view(form=wbem_forms.GiForm), name="GetInstance"),
     # path('mi/', views.Mi.as_view(), name="mi"),
@@ -33,7 +33,7 @@ urlpatterns = [
     path('eq/', views.Dynamic.as_view(form=wbem_forms.EqForm), name="EnumerateQualifiers"),
     path('gq/', views.Dynamic.as_view(form=wbem_forms.GqForm), name="GetQualifier"),
 
-    path('operating_system/<str:system>', views.OperatingSystem.as_view(), name="operating_system"),
+    path('system/<str:system>', views.System.as_view(), name="system"),
 
 
 
