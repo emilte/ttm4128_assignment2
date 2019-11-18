@@ -12,6 +12,7 @@ ALLOWED_HOSTS = []
 
 CUSTOM_SETTINGS = ['dev_settings']
 
+SECRET_KEY = 'NOT SET'
 
 # Static
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticroot')
