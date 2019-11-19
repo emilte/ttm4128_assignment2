@@ -33,7 +33,7 @@ urlpatterns = [
     path('eq/', views.Dynamic.as_view(form=wbem_forms.EqForm), name="EnumerateQualifiers"),
     path('gq/', views.Dynamic.as_view(form=wbem_forms.GqForm), name="GetQualifier"),
 
-    path('operating_system/<str:system>', views.OperatingSystem.as_view(), name="operating_system"),
+    path('system/<str:system>', views.System.as_view(), name="system"),
     path('network/<str:system>', views.Network.as_view(form=wbem_forms.NetworkForm), name="network"),
 
 

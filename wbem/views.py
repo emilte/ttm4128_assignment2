@@ -81,8 +81,20 @@ class System(View):
         # -------------------- SNMP --------------------
         session = easysnmp.Session(hostname='demo.snmplabs.com:161', community='public', version=2)
 
-        l = session.get('sysLocation.0')
-        result['snmp'] = l.value
+        r1 = session.get('sysLocation.0')
+        # r2 = session.get('sysDescription.0')
+        r3 = session.get('sysName.0')
+        r4 = session.get('sysContact.0')
+        r5 = session.get('sysObjectID.0')
+        r6 = session.get('sysUpTime.0')
+        r7 = session.get('sysServices.0')
+        result['snmp_r1'] = r1.value
+        #result['snmp'] = r2.value
+        result['snmp_r3'] = r3.value
+        result['snmp_r4'] = r4.value
+        result['snmp_r5'] = r5.value
+        result['snmp_r6'] = r6.value
+        result['snmp_r7'] = r7.value
 
         # -------------------- END: SNMP --------------------
 
