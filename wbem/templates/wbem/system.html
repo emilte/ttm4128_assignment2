@@ -33,18 +33,11 @@
                 <div class="border border-primary rounded px-4 py-2">
                     <h3>Response:</h3>
 
-                    {% if iterable %}
                         {% for key, value in result.items %}
                             {{ key }} == {{ value }} <br> <br>
                         {% endfor %}
 
                         {{ result }}
-
-                    {% else %}
-                        {{ result }} <br>
-                    {% endif %}
-
-
 
                 </div>
             </div>
