@@ -62,7 +62,7 @@ class System(View):
 
             # Obtain information about the system
             operating_system = conn.EnumerateInstances(ClassName='CIM_OperatingSystem')[0]
-            system = conn.EnumerateInstances(ClassName='CIM_System')[0]
+            name = conn.EnumerateInstances(ClassName='CIM_System')[0]
             processor = conn.EnumerateInstances(ClassName='CIM_Processor')[0]
 
 
@@ -73,25 +73,25 @@ class System(View):
             endpoints = conn.EnumerateInstances(ClassName='CIM_IPProtocolEndpoint')
             networkports = conn.EnumerateInstances(ClassName='CIM_NetworkPort')
 
+
+            # Populate the result for template
+            result['os_name'] = parsed['NAME']
+            result['os_version'] = parsed['VERSION']
+            result['name'] = name['ElementName']
+            result['processor'] = processor['ElementName']
+
             for f in endpoints:
                 result[ f['ElementName'] ] = "Ipv4Address: {}, SubnetMask: {}".format(f['Ipv4Address'], f['SubnetMask'])
 
             for f in networkports:
                 result[ f['ElementName'] + "_mac" ] = f['PermanentAddress']
-
-            # Populate the result for template
-            result['os_name'] = parsed['NAME']
-            result['os_version'] = parsed['VERSION']
-            result['system'] = system['ElementName']
-            result['processor'] = processor['ElementName']
-
             # -------------------- END: CIM --------------------
 
         if system == "demo": # User has chosen another system
             # -------------------- SNMP --------------------
             session = easysnmp.Session(hostname='demo.snmplabs.com:161', community='public', version=2)
 
-            # walk = session.walk('system')
+            # walk = session.walk('ipAdEntAddr')
             # for f in walk:
             #     print(f)
 
@@ -101,11 +101,15 @@ class System(View):
             name = session.get('sysName.0')
             contact = session.get('sysContact.0')
             ttl = session.get('ipDefaultTTL.0')
+            ip = session.walk('ipAdEntAddr')
+            # print(ip)
+
             result['Name'] = name.value
             result['Description'] = descr.value
             result['Location'] = location.value
             result['Contact'] = contact.value
             result['TTL'] = ttl.value
+            result['interfaces'] = [i.value for i in ip]
 
             # -------------------- END: SNMP --------------------
 
