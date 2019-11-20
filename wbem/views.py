@@ -61,13 +61,13 @@ class System(View):
             conn = pywbem.WBEMConnection(server_url)
 
             # Obtain information about the system
-            result1 = conn.EnumerateInstances(ClassName='CIM_OperatingSystem')[0]
-            result2 = conn.EnumerateInstances(ClassName='CIM_System')[0]
-            result3 = conn.EnumerateInstances(ClassName='CIM_Processor')[0]
+            operating_system = conn.EnumerateInstances(ClassName='CIM_OperatingSystem')[0]
+            system = conn.EnumerateInstances(ClassName='CIM_System')[0]
+            processor = conn.EnumerateInstances(ClassName='CIM_Processor')[0]
 
 
-            # result1 is messy. This parses the data to dictionary for easier access
-            parsed = {i.split("=")[0]: i.split("=")[1].replace('"','') for i in result1['Version'].split('" ')}
+            # operating_system is messy. This parses the data to dictionary for easier access
+            parsed = {i.split("=")[0]: i.split("=")[1].replace('"','') for i in operating_system['Version'].split('" ')}
 
             # Network
             endpoints = conn.EnumerateInstances(ClassName='CIM_IPProtocolEndpoint')
@@ -82,8 +82,8 @@ class System(View):
             # Populate the result for template
             result['os_name'] = parsed['NAME']
             result['os_version'] = parsed['VERSION']
-            result['system'] = result2['ElementName']
-            result['processor'] = result3['ElementName']
+            result['system'] = system['ElementName']
+            result['processor'] = processor['ElementName']
 
             # -------------------- END: CIM --------------------
 
@@ -108,9 +108,6 @@ class System(View):
             result['TTL'] = ttl.value
 
             # -------------------- END: SNMP --------------------
-
-
-        # -------------------- END: SNMP --------------------
 
         return render(request, self.template, {
             'result': result,
