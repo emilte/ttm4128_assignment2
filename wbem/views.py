@@ -56,23 +56,34 @@ class System(View):
 
         if system == "cimom": # User can choose <system> in url
             # -------------------- CIM --------------------
-            server_url = 'http://ttm4128.item.ntnu.no:5988/cimom'
+            server_url = 'http://ttm4128.item.ntnu.no:5988/root/cimv2'
 
             conn = pywbem.WBEMConnection(server_url)
 
             # Obtain information about the system
-            result1 = conn.EnumerateInstances(ClassName='CIM_OperatingSystem')[0].properties['ElementName'].value
-            result2 = conn.EnumerateInstances(ClassName='CIM_System')[0].properties['ElementName'].value
-            result3 = conn.EnumerateInstances(ClassName='CIM_Processor')[0].properties['ElementName'].value
+            result1 = conn.EnumerateInstances(ClassName='CIM_OperatingSystem')[0]
+            result2 = conn.EnumerateInstances(ClassName='CIM_System')[0]
+            result3 = conn.EnumerateInstances(ClassName='CIM_Processor')[0]
+
 
             # result1 is messy. This parses the data to dictionary for easier access
-            parsed = {i.split("=")[0]: i.split("=")[1].replace('"','') for i in result1.split('" ')}
+            parsed = {i.split("=")[0]: i.split("=")[1].replace('"','') for i in result1['Version'].split('" ')}
+
+            # Network
+            endpoints = conn.EnumerateInstances(ClassName='CIM_IPProtocolEndpoint')
+            networkports = conn.EnumerateInstances(ClassName='CIM_NetworkPort')
+
+            for f in endpoints:
+                result[ f['ElementName'] ] = "Ipv4Address: {}, SubnetMask: {}".format(f['Ipv4Address'], f['SubnetMask'])
+
+            for f in networkports:
+                result[ f['ElementName'] + "_mac" ] = f['PermanentAddress']
 
             # Populate the result for template
             result['os_name'] = parsed['NAME']
             result['os_version'] = parsed['VERSION']
-            result['system'] = result2
-            result['processor'] = result3
+            result['system'] = result2['ElementName']
+            result['processor'] = result3['ElementName']
 
             # -------------------- END: CIM --------------------
 
@@ -80,21 +91,21 @@ class System(View):
             # -------------------- SNMP --------------------
             session = easysnmp.Session(hostname='demo.snmplabs.com:161', community='public', version=2)
 
+            # walk = session.walk('system')
+            # for f in walk:
+            #     print(f)
+
             # Get ioformation about system, eg. sysLocation
-            r1 = session.get('sysLocation.0')
-            # r2 = session.get('sysDescription.0')
-            r3 = session.get('sysName.0')
-            r4 = session.get('sysContact.0')
-            r5 = session.get('sysObjectID.0')
-            r6 = session.get('sysUpTime.0')
-            r7 = session.get('sysServices.0')
-            result['snmp_r1'] = r1.value
-            #result['snmp'] = r2.value
-            result['snmp_r3'] = r3.value
-            result['snmp_r4'] = r4.value
-            result['snmp_r5'] = r5.value
-            result['snmp_r6'] = r6.value
-            result['snmp_r7'] = r7.value
+            location = session.get('sysLocation.0')
+            descr = session.get('sysDescr.0')
+            name = session.get('sysName.0')
+            contact = session.get('sysContact.0')
+            ttl = session.get('ipDefaultTTL.0')
+            result['Name'] = name.value
+            result['Description'] = descr.value
+            result['Location'] = location.value
+            result['Contact'] = contact.value
+            result['TTL'] = ttl.value
 
             # -------------------- END: SNMP --------------------
 
